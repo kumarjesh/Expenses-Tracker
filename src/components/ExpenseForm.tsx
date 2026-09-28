@@ -50,6 +50,8 @@ export default function ExpenseForm({ onClose, onExpenseAdded }: ExpenseFormProp
     try {
       await addDoc(collection(db, "expenses"), {
         userId: user.uid,
+        userEmail: user.email || "unknown",
+        userName: user.displayName || "Unknown",
         title,
         category,
         amount: parseFloat(amount),
