@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💰 Expense Tracker
 
-## Getting Started
+A modern, responsive, and fully-featured expense tracking application built with **Next.js**, **React**, and **Firebase**. Keep track of your daily expenses, monitor your incomes, and analyze your spending habits across custom budgets.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Authentication:** Secure Google Sign-in powered by Firebase Auth.
+- **Transaction Management:** Add, edit, and seamlessly delete your daily income and expense transactions.
+- **Categorization:** Automatically organize your spending with beautiful category icons (Dining, Groceries, Travel, etc.).
+- **Smart Analytics & Budgets:** Monitor your cash flow and set category-based spending targets.
+- **Custom Date Intervals:** Filter your ledger using a built-in calendar to view transactions over specific days or months.
+- **Data Export:** Instantly export your transaction data into a `.csv` file.
+- **Light & Dark Mode:** Toggle between themes effortlessly for comfortable viewing at any time of day.
+- **Responsive Design:** Mobile-first layout featuring a bottom navigation bar for phones and a clean sidebar for desktop screens.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠 Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework:** [Next.js](https://nextjs.org/) (React)
+- **Database & Auth:** [Firebase](https://firebase.google.com/) (Firestore & Firebase Authentication)
+- **Styling:** Custom CSS (with CSS variables for dynamic theming)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **Date Utilities:** `date-fns` & `react-datepicker`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Getting Started
 
-## Learn More
+### Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+Ensure you have Node.js installed on your machine. You will also need a Firebase project set up.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/kumarjesh/Expenses-Tracker.git
+   cd Expenses-Tracker/expense-tracker
+   ```
 
-## Deploy on Vercel
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Set up Environment Variables:**
+   Create a `.env.local` file in the root directory and add your Firebase configuration:
+   ```env
+   NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+   NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## 🚢 Deployment
+
+This project is optimized for deployment on [Vercel](https://vercel.com/). 
+Simply import the repository into your Vercel dashboard, add the Firebase environment variables in the project settings, and click **Deploy**.
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](../../issues).
