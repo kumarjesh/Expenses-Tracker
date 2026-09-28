@@ -235,7 +235,7 @@ function AddBudgetModal({ onClose, onAdded }: { onClose: () => void, onAdded: ()
           {/* Settings */}
           <div className="flex-col gap-2">
             <span style={{ fontSize: "0.875rem", color: "var(--text-muted)" }}>Target Category</span>
-            <div className="flex-row gap-2" style={{ overflowX: "auto", paddingBottom: "0.5rem" }} className="custom-scrollbar">
+            <div className="flex-row gap-2 custom-scrollbar" style={{ overflowX: "auto", paddingBottom: "0.5rem" }}>
               {categories.map(cat => (
                 <button
                   key={cat}

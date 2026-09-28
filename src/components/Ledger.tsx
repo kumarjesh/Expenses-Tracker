@@ -115,7 +115,7 @@ export default function Ledger({ expenses, loading, startDate, setStartDate, end
           <div className="flex-row gap-2 items-center">
             <DatePicker
               selected={new Date(startDate)}
-              onChange={(date) => { if (date) setStartDate(format(date, "yyyy-MM-dd")); }}
+              onChange={(date: Date | null) => { if (date) setStartDate(format(date, "yyyy-MM-dd")); }}
               selectsStart
               startDate={new Date(startDate)}
               endDate={new Date(endDate)}
@@ -132,7 +132,7 @@ export default function Ledger({ expenses, loading, startDate, setStartDate, end
             <span style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>to</span>
             <DatePicker
               selected={new Date(endDate)}
-              onChange={(date) => { if (date) setEndDate(format(date, "yyyy-MM-dd")); }}
+              onChange={(date: Date | null) => { if (date) setEndDate(format(date, "yyyy-MM-dd")); }}
               selectsEnd
               startDate={new Date(startDate)}
               endDate={new Date(endDate)}
