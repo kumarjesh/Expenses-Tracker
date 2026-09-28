@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { collection, query, where, getDocs, orderBy, doc, deleteDoc } from "firebase/firestore";
 import { db, auth } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -52,6 +52,17 @@ export default function Dashboard() {
   useEffect(() => {
     fetchExpenses();
   }, [fetchExpenses]);
+
+  const handleDeleteExpense = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this transaction?")) return;
+    try {
+      await deleteDoc(doc(db, "expenses", id));
+      fetchExpenses();
+    } catch (error) {
+      console.error("Error deleting expense:", error);
+      alert("Failed to delete transaction.");
+    }
+  };
 
   return (
     <div className="app-wrapper">
@@ -115,6 +126,7 @@ export default function Dashboard() {
                setStartDate={setStartDate}
                endDate={endDate}
                setEndDate={setEndDate}
+               onDelete={handleDeleteExpense}
              />
           )}
           

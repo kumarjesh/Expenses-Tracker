@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Expense } from "@/types";
 import { format, subMonths, addMonths, startOfMonth, endOfMonth, isToday } from "date-fns";
-import { Coffee, ShoppingCart, Train, Film, FileText, Gift, Activity, Briefcase, Plane, Coins } from "lucide-react";
+import { Coffee, ShoppingCart, Train, Film, FileText, Gift, Activity, Briefcase, Plane, Coins, Trash2 } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -14,6 +14,7 @@ interface LedgerProps {
   setStartDate: (d: string) => void;
   endDate: string;
   setEndDate: (d: string) => void;
+  onDelete?: (id: string) => void;
 }
 
 const getCategoryIcon = (categoryName: string) => {
@@ -33,7 +34,7 @@ const getCategoryIcon = (categoryName: string) => {
   return icons[categoryName] || { icon: Coffee, colorClass: "bg-slate" };
 };
 
-export default function Ledger({ expenses, loading, startDate, setStartDate, endDate, setEndDate }: LedgerProps) {
+export default function Ledger({ expenses, loading, startDate, setStartDate, endDate, setEndDate, onDelete }: LedgerProps) {
   
   const currentDate = new Date(startDate);
   
@@ -98,7 +99,7 @@ export default function Ledger({ expenses, loading, startDate, setStartDate, end
       </div>
 
       {/* Date & Interval Selector */}
-      <div className="flex-row justify-between items-center" style={{ marginBottom: "1.5rem" }}>
+      <div className="flex-row justify-between items-center" style={{ marginBottom: "1.5rem", flexWrap: "wrap", gap: "1rem" }}>
         
         {/* Month Navigation */}
         <div className="flex-row gap-4" style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
@@ -194,8 +195,19 @@ export default function Ledger({ expenses, loading, startDate, setStartDate, end
                       </span>
                     </div>
                   </div>
-                  <div className="text-lg" style={{ color: isIncome ? "var(--success)" : "var(--danger)" }}>
-                    {isIncome ? '▲' : '▼'} ₹{expense.amount.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                  <div className="flex-row items-center gap-4">
+                    <div className="text-lg" style={{ color: isIncome ? "var(--success)" : "var(--danger)" }}>
+                      {isIncome ? '▲' : '▼'} ₹{expense.amount.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                    </div>
+                    {onDelete && (
+                      <button 
+                        onClick={() => onDelete(expense.id)}
+                        className="btn-icon" 
+                        style={{ width: "32px", height: "32px", color: "var(--danger)", border: "none", background: "transparent" }}
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    )}
                   </div>
                 </div>
               );
