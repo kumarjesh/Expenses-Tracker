@@ -53,6 +53,7 @@ export default function Dashboard() {
   }, [fetchExpenses]);
 
   const handleDeleteExpense = async (id: string) => {
+    if (!user) return;
     if (!confirm("Are you sure you want to delete this transaction?")) return;
     try {
       await deleteDoc(doc(db, "users", user.uid, "expenses", id));
