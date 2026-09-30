@@ -183,29 +183,29 @@ export default function Ledger({ expenses, loading, startDate, setStartDate, end
               const d = new Date(expense.date);
               
               return (
-                <div key={expense.id} className="list-item">
-                  <div className="flex-row gap-4">
-                    <div className={`category-icon-box ${colorClass}`} style={{ borderRadius: "50%" }}>
-                      <Icon size={24} />
+                <div key={expense.id} className="list-item" style={{ padding: "0.5rem 0" }}>
+                  <div className="flex-row gap-3">
+                    <div className={`category-icon-box ${colorClass}`} style={{ borderRadius: "50%", width: "2.5rem", height: "2.5rem" }}>
+                      <Icon size={18} />
                     </div>
                     <div className="flex-col">
-                      <span className="text-lg">{expense.title}</span>
-                      <span className="text-muted">
+                      <span className="text-base" style={{ fontWeight: 600 }}>{expense.title}</span>
+                      <span className="text-muted" style={{ fontSize: "0.75rem" }}>
                         {isToday(d) ? 'Today' : format(d, "dd MMMM")}
                       </span>
                     </div>
                   </div>
-                  <div className="flex-row items-center gap-4">
-                    <div className="text-lg" style={{ color: isIncome ? "var(--success)" : "var(--danger)" }}>
+                  <div className="flex-row items-center gap-3">
+                    <div className="text-base" style={{ color: isIncome ? "var(--success)" : "var(--danger)", fontWeight: 600 }}>
                       {isIncome ? '▲' : '▼'} ₹{expense.amount.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
                     </div>
                     {onDelete && (
                       <button 
                         onClick={() => onDelete(expense.id)}
                         className="btn-icon" 
-                        style={{ width: "32px", height: "32px", color: "var(--danger)", border: "none", background: "transparent" }}
+                        style={{ width: "28px", height: "28px", color: "var(--danger)", border: "none", background: "transparent" }}
                       >
-                        <Trash2 size={18} />
+                        <Trash2 size={16} />
                       </button>
                     )}
                   </div>

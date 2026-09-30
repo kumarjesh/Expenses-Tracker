@@ -30,8 +30,7 @@ export default function Dashboard() {
     setLoading(true);
     try {
       const q = query(
-        collection(db, "expenses"),
-        where("userId", "==", user.uid),
+        collection(db, "users", user.uid, "expenses"),
         where("date", ">=", startDate),
         where("date", "<=", endDate),
         orderBy("date", "desc")
@@ -56,7 +55,7 @@ export default function Dashboard() {
   const handleDeleteExpense = async (id: string) => {
     if (!confirm("Are you sure you want to delete this transaction?")) return;
     try {
-      await deleteDoc(doc(db, "expenses", id));
+      await deleteDoc(doc(db, "users", user.uid, "expenses", id));
       fetchExpenses();
     } catch (error) {
       console.error("Error deleting expense:", error);

@@ -22,8 +22,7 @@ export default function BudgetsTab({ expenses }: BudgetsTabProps) {
     setLoading(true);
     try {
       const q = query(
-        collection(db, "budgets"),
-        where("userId", "==", user.uid)
+        collection(db, "users", user.uid, "budgets")
       );
       const querySnapshot = await getDocs(q);
       const fetched: Budget[] = [];
@@ -137,7 +136,7 @@ function AddBudgetModal({ onClose, onAdded }: { onClose: () => void, onAdded: ()
 
     setLoading(true);
     try {
-      await addDoc(collection(db, "budgets"), {
+      await addDoc(collection(db, "users", user.uid, "budgets"), {
         userId: user.uid,
         name,
         category,

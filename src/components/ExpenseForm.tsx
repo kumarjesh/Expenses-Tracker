@@ -48,7 +48,7 @@ export default function ExpenseForm({ onClose, onExpenseAdded }: ExpenseFormProp
 
     setLoading(true);
     try {
-      await addDoc(collection(db, "expenses"), {
+      await addDoc(collection(db, "users", user.uid, "expenses"), {
         userId: user.uid,
         userEmail: user.email || "unknown",
         userName: user.displayName || "Unknown",
