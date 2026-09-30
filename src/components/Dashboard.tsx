@@ -10,6 +10,7 @@ import ExpenseForm from "./ExpenseForm";
 import Ledger from "./Ledger";
 import HomeTab from "./HomeTab";
 import BudgetsTab from "./BudgetsTab";
+import MoreTab from "./MoreTab";
 import { Home, List, PieChart, MoreHorizontal, Plus, Moon, Sun, LogOut } from "lucide-react";
 import { startOfMonth, endOfMonth, format } from "date-fns";
 
@@ -136,6 +137,10 @@ export default function Dashboard() {
 
           {activeTab === "budgets" && (
             <BudgetsTab expenses={expenses} />
+          )}
+
+          {activeTab === "more" && (
+            <MoreTab onDataMigrated={fetchExpenses} />
           )}
         </div>
 
