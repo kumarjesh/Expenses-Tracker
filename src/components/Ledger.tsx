@@ -60,6 +60,29 @@ export default function Ledger({ expenses, loading, startDate, setStartDate, end
     
   const netTotal = totalIncome - totalExpense;
 
+  // 1. Sort expenses by date descending, then by createdAt descending (newest entries first)
+  const sortedExpenses = [...expenses].sort((a, b) => {
+    if (a.date !== b.date) {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    }
+    return b.createdAt - a.createdAt; 
+  });
+
+  // 2. Group sorted expenses by date and calculate daily sums
+  const groupedExpenses = sortedExpenses.reduce((acc, expense) => {
+    if (!acc[expense.date]) {
+      acc[expense.date] = { items: [], dailySum: 0 };
+    }
+    acc[expense.date].items.push(expense);
+    // Adjust daily sum based on type
+    if (expense.type === 'income') {
+      acc[expense.date].dailySum += expense.amount;
+    } else {
+      acc[expense.date].dailySum -= expense.amount;
+    }
+    return acc;
+  }, {} as Record<string, { items: Expense[], dailySum: number }>);
+
   const exportCSV = () => {
     const headers = ["Date", "Title", "Category", "Type", "Amount"];
     const rows = expenses.map(e => [
@@ -176,38 +199,54 @@ export default function Ledger({ expenses, loading, startDate, setStartDate, end
             No transactions this month.
           </div>
         ) : (
-          <div className="flex-col" style={{ gap: "0.5rem" }}>
-            {expenses.map((expense) => {
-              const { icon: Icon, colorClass } = getCategoryIcon(expense.category);
-              const isIncome = expense.type === 'income';
-              const d = new Date(expense.date);
-              
+          <div className="flex-col" style={{ gap: "1.5rem" }}>
+            {Object.entries(groupedExpenses).map(([dateStr, group]) => {
+              const d = new Date(dateStr);
               return (
-                <div key={expense.id} className="list-item" style={{ padding: "0.5rem 0" }}>
-                  <div className="flex-row gap-3">
-                    <div className={`category-icon-box ${colorClass}`} style={{ borderRadius: "50%", width: "2.5rem", height: "2.5rem" }}>
-                      <Icon size={18} />
-                    </div>
-                    <div className="flex-col">
-                      <span className="text-base" style={{ fontWeight: 600 }}>{expense.title}</span>
-                      <span className="text-muted" style={{ fontSize: "0.75rem" }}>
-                        {isToday(d) ? 'Today' : format(d, "dd MMMM")}
-                      </span>
-                    </div>
+                <div key={dateStr} className="flex-col" style={{ gap: "0.75rem" }}>
+                  
+                  {/* Daily Header with Day, Date and Sum */}
+                  <div className="flex-row justify-between items-center" style={{ color: "var(--text-muted)", fontSize: "0.875rem", padding: "0 0.5rem" }}>
+                    <span>{format(d, "EEEE, d MMMM")}</span>
+                    <span style={{ fontWeight: 500 }}>
+                      {group.dailySum < 0 ? '-' : ''}₹{Math.abs(group.dailySum).toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                    </span>
                   </div>
-                  <div className="flex-row items-center gap-3">
-                    <div className="text-base" style={{ color: isIncome ? "var(--success)" : "var(--danger)", fontWeight: 600 }}>
-                      {isIncome ? '▲' : '▼'} ₹{expense.amount.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
-                    </div>
-                    {onDelete && (
-                      <button 
-                        onClick={() => onDelete(expense.id)}
-                        className="btn-icon" 
-                        style={{ width: "28px", height: "28px", color: "var(--danger)", border: "none", background: "transparent" }}
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    )}
+                  
+                  {/* Daily Items */}
+                  <div className="flex-col" style={{ gap: "0.25rem" }}>
+                    {group.items.map((expense) => {
+                      const { icon: Icon, colorClass } = getCategoryIcon(expense.category);
+                      const isIncome = expense.type === 'income';
+                      
+                      return (
+                        <div key={expense.id} className="list-item" style={{ padding: "0.75rem 0.5rem" }}>
+                          <div className="flex-row gap-3 items-center">
+                            <div className={`category-icon-box ${colorClass}`} style={{ borderRadius: "50%", width: "2.5rem", height: "2.5rem", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <Icon size={18} />
+                            </div>
+                            <div className="flex-col">
+                              <span className="text-base" style={{ fontWeight: 600 }}>{expense.title}</span>
+                            </div>
+                          </div>
+                          
+                          <div className="flex-row items-center gap-3">
+                            <div className="text-base" style={{ color: isIncome ? "var(--success)" : "var(--danger)", fontWeight: 600 }}>
+                              {isIncome ? '' : '-'}₹{expense.amount.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                            </div>
+                            {onDelete && (
+                              <button 
+                                onClick={() => onDelete(expense.id)}
+                                className="btn-icon" 
+                                style={{ width: "28px", height: "28px", color: "var(--danger)", border: "none", background: "transparent" }}
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               );

@@ -17,12 +17,12 @@ import { startOfMonth, endOfMonth, format } from "date-fns";
 export default function Dashboard() {
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  
+
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("transactions");
   const [showAddModal, setShowAddModal] = useState(false);
-  
+
   const [startDate, setStartDate] = useState(format(startOfMonth(new Date()), "yyyy-MM-dd"));
   const [endDate, setEndDate] = useState(format(endOfMonth(new Date()), "yyyy-MM-dd"));
 
@@ -72,7 +72,7 @@ export default function Dashboard() {
         <div style={{ marginBottom: "2rem" }}>
           <h2 style={{ color: "var(--foreground)" }}>Expense Tracker</h2>
         </div>
-        
+
         <nav style={{ display: "flex", flexDirection: "column", gap: "1rem", flex: 1 }}>
           <NavItem icon={<Home />} label="Home" isActive={activeTab === "home"} onClick={() => setActiveTab("home")} desktop />
           <NavItem icon={<List />} label="Transactions" isActive={activeTab === "transactions"} onClick={() => setActiveTab("transactions")} desktop />
@@ -85,7 +85,7 @@ export default function Dashboard() {
             {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
             <span style={{ fontWeight: 500 }}>{theme === "light" ? "Dark Mode" : "Light Mode"}</span>
           </button>
-          
+
           <button onClick={() => auth.signOut()} className="flex-row gap-2" style={{ color: "var(--danger)", padding: "0.5rem" }}>
             <LogOut size={20} />
             <span style={{ fontWeight: 500 }}>Sign Out</span>
@@ -99,9 +99,9 @@ export default function Dashboard() {
         <header className="flex-row justify-between" style={{ padding: "1.5rem 1rem", borderBottom: "1px solid var(--border)" }}>
           <div className="flex-row gap-4">
             {user?.photoURL && (
-              <img 
-                src={user.photoURL} 
-                alt="Profile" 
+              <img
+                src={user.photoURL}
+                alt="Profile"
                 style={{ width: "40px", height: "40px", borderRadius: "50%", border: "2px solid var(--primary)" }}
                 referrerPolicy="no-referrer"
               />
@@ -120,17 +120,17 @@ export default function Dashboard() {
         {/* Tab Content */}
         <div style={{ flex: 1, overflowY: "auto", position: "relative" }}>
           {activeTab === "transactions" && (
-             <Ledger 
-               expenses={expenses} 
-               loading={loading}
-               startDate={startDate}
-               setStartDate={setStartDate}
-               endDate={endDate}
-               setEndDate={setEndDate}
-               onDelete={handleDeleteExpense}
-             />
+            <Ledger
+              expenses={expenses}
+              loading={loading}
+              startDate={startDate}
+              setStartDate={setStartDate}
+              endDate={endDate}
+              setEndDate={setEndDate}
+              onDelete={handleDeleteExpense}
+            />
           )}
-          
+
           {activeTab === "home" && (
             <HomeTab expenses={expenses} onViewTransactions={() => setActiveTab("transactions")} />
           )}
@@ -145,7 +145,7 @@ export default function Dashboard() {
         </div>
 
         {/* Floating Action Button */}
-        <button 
+        <button
           className="fab-button"
           onClick={() => setShowAddModal(true)}
         >
@@ -163,12 +163,12 @@ export default function Dashboard() {
 
       {/* Modals */}
       {showAddModal && (
-        <ExpenseForm 
-          onClose={() => setShowAddModal(false)} 
+        <ExpenseForm
+          onClose={() => setShowAddModal(false)}
           onExpenseAdded={() => {
             fetchExpenses();
             setShowAddModal(false);
-          }} 
+          }}
         />
       )}
     </div>
@@ -178,12 +178,12 @@ export default function Dashboard() {
 function NavItem({ icon, label, isActive, onClick, desktop = false }: { icon: React.ReactNode, label: string, isActive: boolean, onClick: () => void, desktop?: boolean }) {
   if (desktop) {
     return (
-      <button 
+      <button
         onClick={onClick}
         className="flex-row gap-4"
-        style={{ 
-          padding: "0.75rem 1rem", 
-          borderRadius: "0.5rem", 
+        style={{
+          padding: "0.75rem 1rem",
+          borderRadius: "0.5rem",
           backgroundColor: isActive ? "var(--primary)" : "transparent",
           color: isActive ? "#ffffff" : "var(--text-muted)",
           fontWeight: isActive ? 600 : 500
@@ -196,10 +196,10 @@ function NavItem({ icon, label, isActive, onClick, desktop = false }: { icon: Re
   }
 
   return (
-    <button 
+    <button
       onClick={onClick}
       className="flex-col items-center gap-2"
-      style={{ 
+      style={{
         color: isActive ? "var(--primary)" : "var(--text-muted)",
         padding: "0.5rem",
         opacity: isActive ? 1 : 0.7
