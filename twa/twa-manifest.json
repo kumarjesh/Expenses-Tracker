@@ -1,0 +1,39 @@
+{
+  "packageId": "com.kumarjesh.expensestracker",
+  "host": "expenses-tracker-f5b5d.web.app",
+  "name": "Expense Tracker",
+  "launcherName": "Expenses",
+  "themeColor": "#6366f1",
+  "themeColorDark": "#121212",
+  "navigationColor": "#17171f",
+  "navigationColorDark": "#121212",
+  "navigationDividerColor": "#2d2d3a",
+  "navigationDividerColorDark": "#2d2d3a",
+  "backgroundColor": "#121212",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "/icons/icon-512.png",
+  "maskableIconUrl": "/icons/icon-512-maskable.png",
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": false
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "/"
+}
+

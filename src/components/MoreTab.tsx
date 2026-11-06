@@ -51,60 +51,60 @@ export default function MoreTab({ onDataMigrated }: { onDataMigrated: () => void
   };
 
   return (
-    <div className="flex-col animate-fade-in h-full" style={{ padding: "1rem" }}>
-      <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem" }}>More Settings</h2>
+    <div className="flex-col animate-fade-in" style={{ padding: "0.75rem 0.85rem" }}>
+      <h2 style={{ fontSize: "1.1rem", marginBottom: "0.85rem", fontWeight: 700 }}>Settings & Utilities</h2>
 
-      <div className="flex-col gap-4">
+      <div className="flex-col gap-3">
         {/* Theme Toggle */}
         <button 
           onClick={toggleTheme} 
           className="glass-panel flex-row items-center justify-between" 
-          style={{ padding: "1rem", borderRadius: "1rem", border: "1px solid var(--border)", cursor: "pointer", background: "var(--card-bg)" }}
+          style={{ padding: "0.85rem 1rem", borderRadius: "0.75rem", border: "1px solid var(--border)", cursor: "pointer", background: "var(--card-bg)" }}
         >
           <div className="flex-row items-center gap-3">
-            {theme === "light" ? <Moon size={24} color="var(--primary)" /> : <Sun size={24} color="var(--primary)" />}
-            <span style={{ fontSize: "1.1rem", fontWeight: 500, color: "var(--foreground)" }}>
+            {theme === "light" ? <Moon size={20} color="var(--primary)" /> : <Sun size={20} color="var(--primary)" />}
+            <span style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--foreground)" }}>
               Appearance
             </span>
           </div>
-          <span style={{ color: "var(--text-muted)" }}>
+          <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>
             {theme === "light" ? "Light Mode" : "Dark Mode"}
           </span>
         </button>
 
         {/* Migrate Data */}
-        <div className="glass-panel flex-col gap-3" style={{ padding: "1rem", borderRadius: "1rem", border: "1px solid var(--border)", background: "var(--card-bg)" }}>
+        <div className="glass-panel flex-col gap-2" style={{ padding: "0.85rem 1rem", borderRadius: "0.75rem", border: "1px solid var(--border)", background: "var(--card-bg)" }}>
           <div className="flex-row items-center gap-3">
-            <DownloadCloud size={24} color="var(--primary)" />
-            <span style={{ fontSize: "1.1rem", fontWeight: 500, color: "var(--foreground)" }}>
+            <DownloadCloud size={20} color="var(--primary)" />
+            <span style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--foreground)" }}>
               Sync Old Data
             </span>
           </div>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.875rem", margin: 0 }}>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.8rem", margin: 0 }}>
             If you are missing data from before the database upgrade, click this button to securely migrate your old data into your new secure folder.
           </p>
           <button 
             onClick={migrateData} 
             disabled={migrating}
             className="btn-primary" 
-            style={{ width: "100%", justifyContent: "center", marginTop: "0.5rem" }}
+            style={{ width: "100%", justifyContent: "center", marginTop: "0.35rem" }}
           >
             {migrating ? "Syncing..." : "Sync My Data"}
           </button>
           
           {migrationStatus === 'success' && (
-            <div className="flex-row items-center gap-2" style={{ color: "var(--success)", fontSize: "0.875rem", marginTop: "0.5rem" }}>
-              <CheckCircle size={16} /> Successfully synced!
+            <div className="flex-row items-center gap-2" style={{ color: "var(--success)", fontSize: "0.8rem", marginTop: "0.35rem" }}>
+              <CheckCircle size={15} /> Successfully synced!
             </div>
           )}
           {migrationStatus === 'no-data' && (
-            <div className="flex-row items-center gap-2" style={{ color: "var(--text-muted)", fontSize: "0.875rem", marginTop: "0.5rem" }}>
-              <AlertCircle size={16} /> No old data found.
+            <div className="flex-row items-center gap-2" style={{ color: "var(--text-muted)", fontSize: "0.8rem", marginTop: "0.35rem" }}>
+              <AlertCircle size={15} /> No old data found.
             </div>
           )}
           {migrationStatus === 'error' && (
-            <div className="flex-row items-center gap-2" style={{ color: "var(--danger)", fontSize: "0.875rem", marginTop: "0.5rem" }}>
-              <AlertCircle size={16} /> Error syncing data. Try again.
+            <div className="flex-row items-center gap-2" style={{ color: "var(--danger)", fontSize: "0.8rem", marginTop: "0.35rem" }}>
+              <AlertCircle size={15} /> Error syncing data. Try again.
             </div>
           )}
         </div>
@@ -113,10 +113,10 @@ export default function MoreTab({ onDataMigrated }: { onDataMigrated: () => void
         <button 
           onClick={() => auth.signOut()} 
           className="glass-panel flex-row items-center gap-3" 
-          style={{ padding: "1rem", borderRadius: "1rem", border: "1px solid rgba(239, 68, 68, 0.3)", color: "var(--danger)", background: "rgba(239, 68, 68, 0.05)", cursor: "pointer", marginTop: "1rem" }}
+          style={{ padding: "0.85rem 1rem", borderRadius: "0.75rem", border: "1px solid rgba(239, 68, 68, 0.3)", color: "var(--danger)", background: "rgba(239, 68, 68, 0.05)", cursor: "pointer", marginTop: "0.5rem" }}
         >
-          <LogOut size={24} />
-          <span style={{ fontSize: "1.1rem", fontWeight: 600 }}>Sign Out</span>
+          <LogOut size={20} />
+          <span style={{ fontSize: "0.95rem", fontWeight: 600 }}>Sign Out</span>
         </button>
       </div>
     </div>

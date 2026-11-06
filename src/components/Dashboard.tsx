@@ -69,56 +69,58 @@ export default function Dashboard() {
     <div className="app-wrapper">
       {/* Desktop Sidebar */}
       <aside className="sidebar">
-        <div style={{ marginBottom: "2rem" }}>
-          <h2 style={{ color: "var(--foreground)" }}>Expense Tracker</h2>
+        <div style={{ marginBottom: "1.5rem" }}>
+          <h2 style={{ color: "var(--foreground)", fontSize: "1.2rem" }}>Expense Tracker</h2>
         </div>
 
-        <nav style={{ display: "flex", flexDirection: "column", gap: "1rem", flex: 1 }}>
-          <NavItem icon={<Home />} label="Home" isActive={activeTab === "home"} onClick={() => setActiveTab("home")} desktop />
-          <NavItem icon={<List />} label="Transactions" isActive={activeTab === "transactions"} onClick={() => setActiveTab("transactions")} desktop />
-          <NavItem icon={<PieChart />} label="Budgets" isActive={activeTab === "budgets"} onClick={() => setActiveTab("budgets")} desktop />
-          <NavItem icon={<MoreHorizontal />} label="More" isActive={activeTab === "more"} onClick={() => setActiveTab("more")} desktop />
+        <nav style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1 }}>
+          <NavItem icon={<Home size={18} />} label="Home" isActive={activeTab === "home"} onClick={() => setActiveTab("home")} desktop />
+          <NavItem icon={<List size={18} />} label="Transactions" isActive={activeTab === "transactions"} onClick={() => setActiveTab("transactions")} desktop />
+          <NavItem icon={<PieChart size={18} />} label="Budgets" isActive={activeTab === "budgets"} onClick={() => setActiveTab("budgets")} desktop />
+          <NavItem icon={<MoreHorizontal size={18} />} label="More" isActive={activeTab === "more"} onClick={() => setActiveTab("more")} desktop />
         </nav>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem", borderTop: "1px solid var(--border)", paddingTop: "1rem" }}>
-          <button onClick={toggleTheme} className="flex-row gap-2" style={{ color: "var(--text-muted)", padding: "0.5rem" }}>
-            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
-            <span style={{ fontWeight: 500 }}>{theme === "light" ? "Dark Mode" : "Light Mode"}</span>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", borderTop: "1px solid var(--border)", paddingTop: "0.75rem" }}>
+          <button onClick={toggleTheme} className="flex-row gap-2" style={{ color: "var(--text-muted)", padding: "0.4rem 0.5rem", borderRadius: "0.5rem" }}>
+            {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+            <span style={{ fontWeight: 500, fontSize: "0.85rem" }}>{theme === "light" ? "Dark Mode" : "Light Mode"}</span>
           </button>
 
-          <button onClick={() => auth.signOut()} className="flex-row gap-2" style={{ color: "var(--danger)", padding: "0.5rem" }}>
-            <LogOut size={20} />
-            <span style={{ fontWeight: 500 }}>Sign Out</span>
+          <button onClick={() => auth.signOut()} className="flex-row gap-2" style={{ color: "var(--danger)", padding: "0.4rem 0.5rem", borderRadius: "0.5rem" }}>
+            <LogOut size={18} />
+            <span style={{ fontWeight: 500, fontSize: "0.85rem" }}>Sign Out</span>
           </button>
         </div>
       </aside>
 
       {/* Main Content Area */}
       <main className="main-content">
-        {/* Header */}
-        <header className="flex-row justify-between" style={{ padding: "1.5rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <div className="flex-row gap-4">
+        {/* Compact Header */}
+        <header className="flex-row justify-between" style={{ padding: "0.65rem 1rem", borderBottom: "1px solid var(--border)", background: "var(--card-bg)" }}>
+          <div className="flex-row gap-2">
             {user?.photoURL && (
               <img
                 src={user.photoURL}
                 alt="Profile"
-                style={{ width: "40px", height: "40px", borderRadius: "50%", border: "2px solid var(--primary)" }}
+                style={{ width: "30px", height: "30px", borderRadius: "50%", border: "2px solid var(--primary)" }}
                 referrerPolicy="no-referrer"
               />
             )}
             <div>
-              <h1 style={{ fontSize: "1.25rem", margin: 0 }}>Hello, {user?.displayName?.split(" ")[0]}</h1>
+              <h1 style={{ fontSize: "0.95rem", margin: 0, fontWeight: 700 }}>
+                Hello, {user?.displayName ? user.displayName.split(" ")[0] : "User"}
+              </h1>
             </div>
           </div>
 
-          {/* Mobile Theme Toggle */}
-          <button onClick={toggleTheme} className="btn-icon" style={{ display: "block" }}>
-            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+          {/* Theme Toggle */}
+          <button onClick={toggleTheme} className="btn-icon" style={{ width: "32px", height: "32px" }}>
+            {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
           </button>
         </header>
 
-        {/* Tab Content */}
-        <div style={{ flex: 1, overflowY: "auto", position: "relative" }}>
+        {/* Tab Content Container - Smooth unified scroll with safe bottom padding */}
+        <div className="tab-scroll-container">
           {activeTab === "transactions" && (
             <Ledger
               expenses={expenses}
@@ -148,17 +150,18 @@ export default function Dashboard() {
         <button
           className="fab-button"
           onClick={() => setShowAddModal(true)}
+          aria-label="Add transaction"
         >
-          <Plus size={30} />
+          <Plus size={24} />
         </button>
       </main>
 
       {/* Mobile Bottom Navigation */}
       <nav className="bottom-nav">
-        <NavItem icon={<Home />} label="Home" isActive={activeTab === "home"} onClick={() => setActiveTab("home")} />
-        <NavItem icon={<List />} label="Transactions" isActive={activeTab === "transactions"} onClick={() => setActiveTab("transactions")} />
-        <NavItem icon={<PieChart />} label="Budgets" isActive={activeTab === "budgets"} onClick={() => setActiveTab("budgets")} />
-        <NavItem icon={<MoreHorizontal />} label="More" isActive={activeTab === "more"} onClick={() => setActiveTab("more")} />
+        <NavItem icon={<Home size={19} />} label="Home" isActive={activeTab === "home"} onClick={() => setActiveTab("home")} />
+        <NavItem icon={<List size={19} />} label="Transactions" isActive={activeTab === "transactions"} onClick={() => setActiveTab("transactions")} />
+        <NavItem icon={<PieChart size={19} />} label="Budgets" isActive={activeTab === "budgets"} onClick={() => setActiveTab("budgets")} />
+        <NavItem icon={<MoreHorizontal size={19} />} label="More" isActive={activeTab === "more"} onClick={() => setActiveTab("more")} />
       </nav>
 
       {/* Modals */}
@@ -180,13 +183,14 @@ function NavItem({ icon, label, isActive, onClick, desktop = false }: { icon: Re
     return (
       <button
         onClick={onClick}
-        className="flex-row gap-4"
+        className="flex-row gap-3"
         style={{
-          padding: "0.75rem 1rem",
+          padding: "0.6rem 0.85rem",
           borderRadius: "0.5rem",
           backgroundColor: isActive ? "var(--primary)" : "transparent",
           color: isActive ? "#ffffff" : "var(--text-muted)",
-          fontWeight: isActive ? 600 : 500
+          fontWeight: isActive ? 600 : 500,
+          fontSize: "0.875rem"
         }}
       >
         {icon}
@@ -198,11 +202,12 @@ function NavItem({ icon, label, isActive, onClick, desktop = false }: { icon: Re
   return (
     <button
       onClick={onClick}
-      className="flex-col items-center gap-2"
+      className="flex-col items-center gap-1"
       style={{
         color: isActive ? "var(--primary)" : "var(--text-muted)",
-        padding: "0.5rem",
-        opacity: isActive ? 1 : 0.7
+        padding: "0.25rem 0.5rem",
+        opacity: isActive ? 1 : 0.75,
+        minWidth: "60px"
       }}
     >
       {icon}

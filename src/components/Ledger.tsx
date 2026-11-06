@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Expense } from "@/types";
-import { format, subMonths, addMonths, startOfMonth, endOfMonth, isToday } from "date-fns";
-import { Coffee, ShoppingCart, Train, Film, FileText, Gift, Activity, Briefcase, Plane, Coins, Trash2 } from "lucide-react";
+import { format, subMonths, addMonths, startOfMonth, endOfMonth } from "date-fns";
+import { 
+  Coffee, ShoppingCart, Train, Film, FileText, Gift, Activity, 
+  Briefcase, Plane, Coins, Trash2, ChevronLeft, ChevronRight, Download 
+} from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -60,7 +62,7 @@ export default function Ledger({ expenses, loading, startDate, setStartDate, end
     
   const netTotal = totalIncome - totalExpense;
 
-  // 1. Sort expenses by date descending, then by createdAt descending (newest entries first)
+  // Sort expenses by date descending, then by createdAt descending
   const sortedExpenses = [...expenses].sort((a, b) => {
     if (a.date !== b.date) {
       return new Date(b.date).getTime() - new Date(a.date).getTime();
@@ -68,13 +70,12 @@ export default function Ledger({ expenses, loading, startDate, setStartDate, end
     return b.createdAt - a.createdAt; 
   });
 
-  // 2. Group sorted expenses by date and calculate daily sums
+  // Group sorted expenses by date and calculate daily sums
   const groupedExpenses = sortedExpenses.reduce((acc, expense) => {
     if (!acc[expense.date]) {
       acc[expense.date] = { items: [], dailySum: 0 };
     }
     acc[expense.date].items.push(expense);
-    // Adjust daily sum based on type
     if (expense.type === 'income') {
       acc[expense.date].dailySum += expense.amount;
     } else {
@@ -109,138 +110,254 @@ export default function Ledger({ expenses, loading, startDate, setStartDate, end
   };
 
   return (
-    <div className="flex-col h-full" style={{ padding: "1rem" }}>
+    <div className="flex-col" style={{ padding: "0.75rem 0.85rem" }}>
       
-      <div className="flex-row justify-between items-center" style={{ marginBottom: "1rem" }}>
-        <h2 style={{ fontSize: "1.25rem", margin: 0 }}>Transactions</h2>
+      {/* Top Action Bar: Title & Export CSV */}
+      <div className="flex-row justify-between items-center" style={{ marginBottom: "0.5rem" }}>
+        <div className="flex-row items-center gap-2">
+          <h2 style={{ fontSize: "1.1rem", margin: 0, fontWeight: 700 }}>Transactions</h2>
+          <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", background: "var(--card-bg)", border: "1px solid var(--border)", padding: "0.15rem 0.45rem", borderRadius: "1rem" }}>
+            {expenses.length}
+          </span>
+        </div>
+        
         <button 
           onClick={exportCSV}
-          style={{ background: "var(--card-bg)", color: "var(--primary)", border: "1px solid var(--border)", padding: "0.5rem 1rem", borderRadius: "0.5rem", fontSize: "0.75rem", fontWeight: 600, cursor: "pointer" }}
+          title="Export CSV"
+          className="flex-row items-center gap-1"
+          style={{ 
+            background: "var(--card-bg)", 
+            color: "var(--primary)", 
+            border: "1px solid var(--border)", 
+            padding: "0.3rem 0.65rem", 
+            borderRadius: "0.45rem", 
+            fontSize: "0.75rem", 
+            fontWeight: 600, 
+            cursor: "pointer" 
+          }}
         >
-          Export CSV
+          <Download size={13} />
+          <span>CSV</span>
         </button>
       </div>
 
-      {/* Date & Interval Selector */}
-      <div className="flex-row justify-between items-center" style={{ marginBottom: "1.5rem", flexWrap: "wrap", gap: "1rem" }}>
-        
-        {/* Month Navigation */}
-        <div className="flex-row gap-4" style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
-          <button onClick={handlePrevMonth} style={{ fontWeight: 500 }}>{format(subMonths(currentDate, 1), "MMM")}</button>
-          <div style={{ color: "var(--foreground)", fontWeight: 700, borderBottom: "2px solid var(--foreground)", paddingBottom: "0.25rem", fontSize: "1rem" }}>
-            {format(currentDate, "MMMM")}
-          </div>
-          <button onClick={handleNextMonth} style={{ fontWeight: 500 }}>{format(addMonths(currentDate, 1), "MMM")}</button>
+      {/* Date Navigation & Custom Interval Selector - Single Sleek Toolbar */}
+      <div 
+        className="flex-row justify-between items-center glass-panel" 
+        style={{ padding: "0.45rem 0.65rem", marginBottom: "0.5rem", borderRadius: "0.5rem" }}
+      >
+        {/* Month Switcher */}
+        <div className="flex-row items-center gap-1">
+          <button 
+            onClick={handlePrevMonth} 
+            className="btn-icon" 
+            style={{ width: "26px", height: "26px", border: "none" }}
+            aria-label="Previous month"
+          >
+            <ChevronLeft size={16} />
+          </button>
+
+          <span style={{ fontSize: "0.85rem", fontWeight: 700, minWidth: "75px", textAlign: "center" }}>
+            {format(currentDate, "MMM yyyy")}
+          </span>
+
+          <button 
+            onClick={handleNextMonth} 
+            className="btn-icon" 
+            style={{ width: "26px", height: "26px", border: "none" }}
+            aria-label="Next month"
+          >
+            <ChevronRight size={16} />
+          </button>
         </div>
 
-        {/* Custom Interval Toggle (React Datepicker) */}
-        <div className="flex-col items-end gap-1 relative custom-datepicker-wrapper">
-          <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Interval</span>
-          <div className="flex-row gap-2 items-center">
-            <DatePicker
-              selected={new Date(startDate)}
-              onChange={(date: Date | null) => { if (date) setStartDate(format(date, "yyyy-MM-dd")); }}
-              selectsStart
-              startDate={new Date(startDate)}
-              endDate={new Date(endDate)}
-              customInput={
-                <button style={{ 
-                  background: "var(--card-bg)", border: "1px solid var(--border)", color: "var(--foreground)", 
-                  padding: "0.75rem 1rem", borderRadius: "0.5rem", fontSize: "1rem", fontWeight: 600, cursor: "pointer"
-                }}>
-                  {format(new Date(startDate), "dd MMM")} 📅
-                </button>
-              }
-              withPortal
-            />
-            <span style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>to</span>
-            <DatePicker
-              selected={new Date(endDate)}
-              onChange={(date: Date | null) => { if (date) setEndDate(format(date, "yyyy-MM-dd")); }}
-              selectsEnd
-              startDate={new Date(startDate)}
-              endDate={new Date(endDate)}
-              minDate={new Date(startDate)}
-              customInput={
-                <button style={{ 
-                  background: "var(--card-bg)", border: "1px solid var(--border)", color: "var(--foreground)", 
-                  padding: "0.75rem 1rem", borderRadius: "0.5rem", fontSize: "1rem", fontWeight: 600, cursor: "pointer"
-                }}>
-                  {format(new Date(endDate), "dd MMM")} 📅
-                </button>
-              }
-              withPortal
-            />
-          </div>
+        {/* Custom Range Picker */}
+        <div className="flex-row items-center gap-1">
+          <DatePicker
+            selected={new Date(startDate)}
+            onChange={(date: Date | null) => { if (date) setStartDate(format(date, "yyyy-MM-dd")); }}
+            selectsStart
+            startDate={new Date(startDate)}
+            endDate={new Date(endDate)}
+            customInput={
+              <button style={{ 
+                background: "var(--background)", 
+                border: "1px solid var(--border)", 
+                color: "var(--foreground)", 
+                padding: "0.25rem 0.5rem", 
+                borderRadius: "0.4rem", 
+                fontSize: "0.75rem", 
+                fontWeight: 600, 
+                cursor: "pointer"
+              }}>
+                {format(new Date(startDate), "d MMM")}
+              </button>
+            }
+            withPortal
+          />
+          <span style={{ color: "var(--text-muted)", fontSize: "0.7rem" }}>–</span>
+          <DatePicker
+            selected={new Date(endDate)}
+            onChange={(date: Date | null) => { if (date) setEndDate(format(date, "yyyy-MM-dd")); }}
+            selectsEnd
+            startDate={new Date(startDate)}
+            endDate={new Date(endDate)}
+            minDate={new Date(startDate)}
+            customInput={
+              <button style={{ 
+                background: "var(--background)", 
+                border: "1px solid var(--border)", 
+                color: "var(--foreground)", 
+                padding: "0.25rem 0.5rem", 
+                borderRadius: "0.4rem", 
+                fontSize: "0.75rem", 
+                fontWeight: 600, 
+                cursor: "pointer"
+              }}>
+                {format(new Date(endDate), "d MMM")}
+              </button>
+            }
+            withPortal
+          />
         </div>
       </div>
 
-      {/* Summary Header */}
-      <div className="glass-panel flex-row justify-between" style={{ padding: "1rem", marginBottom: "1.5rem", fontSize: "0.875rem", fontWeight: 600 }}>
-        <div className="flex-row gap-2" style={{ color: "var(--danger)" }}>
-          <span>▼</span> ₹{totalExpense.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+      {/* Summary Metrics Strip - High Density & Compact */}
+      <div 
+        className="glass-panel flex-row justify-between items-center" 
+        style={{ padding: "0.5rem 0.75rem", marginBottom: "0.5rem", borderRadius: "0.5rem", fontSize: "0.78rem" }}
+      >
+        <div className="flex-col" style={{ gap: "0.1rem" }}>
+          <span style={{ fontSize: "0.65rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Expense</span>
+          <span style={{ color: "var(--danger)", fontWeight: 700 }}>
+            -₹{totalExpense.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+          </span>
         </div>
-        <div className="flex-row gap-2" style={{ color: "var(--success)" }}>
-          <span>▲</span> ₹{totalIncome.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+
+        <div className="flex-col" style={{ gap: "0.1rem" }}>
+          <span style={{ fontSize: "0.65rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Income</span>
+          <span style={{ color: "var(--success)", fontWeight: 700 }}>
+            +₹{totalIncome.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+          </span>
         </div>
-        <div className="flex-row gap-2" style={{ color: "var(--foreground)" }}>
-          <span>=</span> {netTotal < 0 ? '-' : ''}₹{Math.abs(netTotal).toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+
+        <div className="flex-col items-end" style={{ gap: "0.1rem" }}>
+          <span style={{ fontSize: "0.65rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Net Balance</span>
+          <span style={{ color: netTotal >= 0 ? "var(--foreground)" : "var(--danger)", fontWeight: 700 }}>
+            {netTotal < 0 ? '-' : ''}₹{Math.abs(netTotal).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+          </span>
         </div>
       </div>
 
-      {/* Transactions List */}
-      <div className="custom-scrollbar" style={{ flex: 1, overflowY: "auto", paddingRight: "0.5rem" }}>
+      {/* Transactions List - Unified high-density list without nested scroll container */}
+      <div style={{ flex: 1 }}>
         {loading ? (
-          <div className="flex-col items-center justify-center h-full">
-            <span style={{ color: "var(--text-muted)" }}>Loading...</span>
+          <div className="flex-col items-center justify-center" style={{ padding: "3rem 0" }}>
+            <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>Loading transactions...</span>
           </div>
         ) : expenses.length === 0 ? (
-          <div className="text-center" style={{ color: "var(--text-muted)", marginTop: "3rem" }}>
-            No transactions this month.
+          <div className="text-center" style={{ color: "var(--text-muted)", padding: "3rem 1rem", fontSize: "0.85rem" }}>
+            No transactions found for this period.
           </div>
         ) : (
-          <div className="flex-col" style={{ gap: "1.5rem" }}>
+          <div className="flex-col" style={{ gap: "0.35rem" }}>
             {Object.entries(groupedExpenses).map(([dateStr, group]) => {
               const d = new Date(dateStr);
               return (
-                <div key={dateStr} className="flex-col" style={{ gap: "0.75rem" }}>
+                <div key={dateStr} className="flex-col" style={{ gap: "0.2rem" }}>
                   
-                  {/* Daily Header with Day, Date and Sum */}
-                  <div className="flex-row justify-between items-center" style={{ color: "var(--text-muted)", fontSize: "0.875rem", padding: "0 0.5rem" }}>
-                    <span>{format(d, "EEEE, d MMMM")}</span>
-                    <span style={{ fontWeight: 500 }}>
-                      {group.dailySum < 0 ? '-' : ''}₹{Math.abs(group.dailySum).toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                  {/* Clean Daily Subheader */}
+                  <div 
+                    className="flex-row justify-between items-center" 
+                    style={{ 
+                      color: "var(--text-muted)", 
+                      fontSize: "0.72rem", 
+                      fontWeight: 600,
+                      padding: "0.45rem 0.35rem 0.2rem 0.35rem",
+                      borderBottom: "1px solid var(--card-border)",
+                      marginTop: "0.25rem"
+                    }}
+                  >
+                    <span>{format(d, "EEE, d MMMM")}</span>
+                    <span style={{ fontWeight: 600, color: group.dailySum < 0 ? "var(--danger)" : "var(--success)" }}>
+                      {group.dailySum < 0 ? '-' : '+'}₹{Math.abs(group.dailySum).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                     </span>
                   </div>
                   
-                  {/* Daily Items */}
-                  <div className="flex-col" style={{ gap: "0.25rem" }}>
+                  {/* Daily Transaction Items */}
+                  <div className="flex-col" style={{ gap: "0.15rem" }}>
                     {group.items.map((expense) => {
                       const { icon: Icon, colorClass } = getCategoryIcon(expense.category);
                       const isIncome = expense.type === 'income';
                       
                       return (
-                        <div key={expense.id} className="list-item" style={{ padding: "0.75rem 0.5rem" }}>
-                          <div className="flex-row gap-3 items-center">
-                            <div className={`category-icon-box ${colorClass}`} style={{ borderRadius: "50%", width: "2.5rem", height: "2.5rem", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              <Icon size={18} />
+                        <div 
+                          key={expense.id} 
+                          className="transaction-row"
+                        >
+                          {/* Left: Category Icon & Title + Subtitle */}
+                          <div className="flex-row gap-2 items-center" style={{ minWidth: 0, flex: 1 }}>
+                            <div 
+                              className={`category-icon-box ${colorClass}`} 
+                              style={{ 
+                                borderRadius: "50%", 
+                                width: "2rem", 
+                                height: "2rem", 
+                                minWidth: "2rem",
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center' 
+                              }}
+                            >
+                              <Icon size={14} />
                             </div>
-                            <div className="flex-col">
-                              <span className="text-base" style={{ fontWeight: 600 }}>{expense.title}</span>
+
+                            <div className="flex-col" style={{ minWidth: 0, flex: 1 }}>
+                              <span 
+                                style={{ 
+                                  fontSize: "0.85rem", 
+                                  fontWeight: 600, 
+                                  lineHeight: 1.25,
+                                  whiteSpace: "nowrap",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis"
+                                }}
+                              >
+                                {expense.title}
+                              </span>
+                              <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", lineHeight: 1.1 }}>
+                                {expense.category}
+                              </span>
                             </div>
                           </div>
                           
-                          <div className="flex-row items-center gap-3">
-                            <div className="text-base" style={{ color: isIncome ? "var(--success)" : "var(--danger)", fontWeight: 600 }}>
-                              {isIncome ? '' : '-'}₹{expense.amount.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                          {/* Right: Amount & Delete Button */}
+                          <div className="flex-row items-center gap-2" style={{ flexShrink: 0, marginLeft: "0.5rem" }}>
+                            <div 
+                              style={{ 
+                                color: isIncome ? "var(--success)" : "var(--danger)", 
+                                fontWeight: 700,
+                                fontSize: "0.85rem"
+                              }}
+                            >
+                              {isIncome ? '+' : '-'}₹{expense.amount.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                             </div>
+
                             {onDelete && (
                               <button 
                                 onClick={() => onDelete(expense.id)}
-                                className="btn-icon" 
-                                style={{ width: "28px", height: "28px", color: "var(--danger)", border: "none", background: "transparent" }}
+                                title="Delete"
+                                style={{ 
+                                  width: "24px", 
+                                  height: "24px", 
+                                  color: "var(--text-muted)", 
+                                  display: "flex", 
+                                  alignItems: "center", 
+                                  justifyContent: "center",
+                                  borderRadius: "4px"
+                                }}
                               >
-                                <Trash2 size={16} />
+                                <Trash2 size={14} />
                               </button>
                             )}
                           </div>

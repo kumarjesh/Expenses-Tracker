@@ -42,14 +42,14 @@ export default function BudgetsTab({ expenses }: BudgetsTabProps) {
   }, [fetchBudgets]);
 
   return (
-    <div className="flex-col animate-fade-in h-full" style={{ padding: "1rem" }}>
-      <div className="flex-row justify-between items-center" style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.5rem", margin: 0 }}>Budgets</h2>
+    <div className="flex-col animate-fade-in" style={{ padding: "0.75rem 0.85rem" }}>
+      <div className="flex-row justify-between items-center" style={{ marginBottom: "0.75rem" }}>
+        <h2 style={{ fontSize: "1.1rem", margin: 0, fontWeight: 700 }}>Budgets</h2>
         <button 
           onClick={() => setShowAddModal(true)}
-          style={{ background: "var(--primary)", color: "white", padding: "0.5rem", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}
+          style={{ background: "var(--primary)", color: "white", padding: "0.35rem", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}
         >
-          <Plus size={20} />
+          <Plus size={18} />
         </button>
       </div>
 
