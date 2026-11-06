@@ -3,11 +3,10 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "app.vercel.expensestracker.twa",
+      "package_name": "com.kumarjesh.expensestracker",
       "sha256_cert_fingerprints": [
-        "14:6D:E9:7D:0F:52:AB:E0:43:99:91:30:17:8C:63:F5:DF:B6:8F:05:4F:9E:FF:4C:E6:4D:42:0D:37:74:DE:6E"
+        "B2:0F:7F:B1:43:1C:03:6D:9C:CC:4C:67:BC:D3:3D:57:2A:06:41:B4:C6:1F:09:A4:42:4F:11:3B:3F:0C:12:9C"
       ]
     }
   }
 ]
-
